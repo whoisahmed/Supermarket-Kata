@@ -14,17 +14,7 @@ class Kata::Teller
 
   def checks_out_articles_from(the_cart)
     receipt = Kata::Receipt.new
-    items = the_cart.items
-    items.each do |pq|
-      receipt_item = Kata::ReceiptItemFactory.call(
-        product: pq.product,
-        quantity: pq.quantity,
-        price: @catalog.unit_price(pq.product),
-      )
-
-      receipt.add_receipt_item(receipt_item)
-    end
-
+    add_receipt_items(receipt, the_cart)
     apply_offers(receipt, the_cart)
     receipt
   end
@@ -58,6 +48,24 @@ class Kata::Teller
     when Kata::SpecialOfferType::FIVE_FOR_AMOUNT
       five_for_amount_discount(product, quantity, unit_price, offer.argument)
     end
+  end
+
+  private
+
+  def add_receipt_items(receipt, the_cart)
+    the_cart.items.each do |pq|
+      receipt_item = create_receipt_item(pq)
+      receipt.add_receipt_item(receipt_item)
+    end
+  end
+
+  def create_receipt_item(pq)
+    price = @catalog.unit_price(pq.product)
+    Kata::ReceiptItemFactory.call(
+      product: pq.product,
+      quantity: pq.quantity,
+      price: price
+    )
   end
 
   def three_for_two_discount(product, quantity, unit_price)
