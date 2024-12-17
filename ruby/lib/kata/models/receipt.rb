@@ -17,6 +17,11 @@ class Kata::Receipt
     nil
   end
 
+  def add_receipt_item(receipt_item)
+    @items << receipt_item
+    nil
+  end
+
   def items
     Array.new @items
   end
