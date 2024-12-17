@@ -1,11 +1,17 @@
 class Kata::SupermarketCatalog
 
-  def add_product(product, price)
-    raise NotImplementedError
+  def initialize
+    @products = {}
+    @prices = {}
   end
 
-  def unit_price(product)
-    raise NotImplementedError
+  def add_product(product, price)
+    @products[product.name] = product
+    @prices[product.name] = price
+  end
+
+  def unit_price(p)
+    @prices.fetch(p.name)
   end
 
 end
